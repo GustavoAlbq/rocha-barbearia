@@ -86,7 +86,7 @@ const Contact = () => {
               <h3 className="font-semibold text-foreground text-lg mb-4">
                 Siga-nos nas redes sociais
               </h3>
-              <div className="flex gap-4">
+              <div className="flex gap-4 justify-center">
                 {socialLinks.map((social) => {
                   const IconComponent = social.icon;
                   return (
