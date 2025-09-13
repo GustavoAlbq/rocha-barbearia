@@ -5,8 +5,8 @@ const Contact = () => {
   const contactInfo = [{
     icon: MapPin,
     title: "Endereço",
-    info: "Rua das Palmeiras, 123",
-    subtitle: "Centro, São Paulo - SP"
+    info: "R. Santa Quitéria, 334",
+    subtitle: "Heliópolis, Garanhuns - PE, 55298-140"
   }, {
     icon: Phone,
     title: "Telefone",
@@ -93,7 +93,7 @@ const Contact = () => {
                     Nossa Localização
                   </h3>
                   <p className="text-muted-foreground">
-                    Centro de São Paulo
+                    Heliópolis, Garanhuns - PE
                   </p>
                   <Button variant="golden" className="mt-4" asChild>
                     <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer">
