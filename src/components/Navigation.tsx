@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,6 +20,18 @@ const Navigation = () => {
   }, []);
 
   const scrollToSection = (id: string) => {
+    if (id === 'services') {
+      navigate('/services');
+      setIsMobileMenuOpen(false);
+      return;
+    }
+    
+    if (location.pathname !== '/') {
+      navigate(`/#${id}`);
+      setIsMobileMenuOpen(false);
+      return;
+    }
+    
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: 'smooth' });
     setIsMobileMenuOpen(false);

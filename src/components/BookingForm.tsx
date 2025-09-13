@@ -10,11 +10,14 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 const BookingForm = () => {
   const [selectedBarber, setSelectedBarber] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedTime, setSelectedTime] = useState<string>("");
+  const [selectedService, setSelectedService] = useState<string>("");
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -22,17 +25,45 @@ const BookingForm = () => {
   });
 
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
+
+  // Ler parâmetros da URL para serviço pré-selecionado
+  useEffect(() => {
+    const serviceParam = searchParams.get('service');
+    const serviceNameParam = searchParams.get('serviceName');
+    
+    if (serviceParam && serviceNameParam) {
+      setSelectedService(decodeURIComponent(serviceNameParam));
+      
+      // Scroll to booking section if coming from services page
+      setTimeout(() => {
+        const bookingSection = document.getElementById('booking');
+        bookingSection?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }, [searchParams]);
 
   const barbers = ["Rocha", "Rick"];
   const timeSlots = [
     "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
     "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"
   ];
+  
+  const services = [
+    "Corte Clássico",
+    "Corte Moderno", 
+    "Corte Degradê",
+    "Corte Social",
+    "Corte Criativo",
+    "Barba Completa",
+    "Corte + Barba",
+    "Bigode & Cavanhaque"
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!selectedBarber || !selectedDate || !selectedTime || !formData.name || !formData.phone) {
+    if (!selectedBarber || !selectedDate || !selectedTime || !selectedService || !formData.name || !formData.phone) {
       toast({
         title: "Erro no agendamento",
         description: "Por favor, preencha todos os campos obrigatórios.",
@@ -43,13 +74,14 @@ const BookingForm = () => {
 
     toast({
       title: "Agendamento realizado!",
-      description: `Seu horário com ${selectedBarber} foi agendado para ${format(selectedDate, "dd/MM/yyyy", { locale: ptBR })} às ${selectedTime}.`,
+      description: `Seu horário com ${selectedBarber} foi agendado para ${format(selectedDate, "dd/MM/yyyy", { locale: ptBR })} às ${selectedTime} para ${selectedService}.`,
     });
 
     // Reset form
     setSelectedBarber("");
     setSelectedDate(undefined);
     setSelectedTime("");
+    setSelectedService("");
     setFormData({ name: "", phone: "", email: "" });
   };
 
@@ -67,6 +99,28 @@ const BookingForm = () => {
 
         <Card className="bg-surface-elevated border-border shadow-dark p-8">
           <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Service Selection */}
+            <div className="space-y-3">
+              <Label className="text-foreground font-medium">
+                <Scissors className="w-4 h-4 inline mr-2" />
+                Escolha o Serviço *
+              </Label>
+              <div className="grid grid-cols-2 gap-3">
+                {services.map((service) => (
+                  <Button
+                    key={service}
+                    type="button"
+                    variant={selectedService === service ? "golden" : "outline"}
+                    className="justify-start text-left p-3 h-auto"
+                    onClick={() => setSelectedService(service)}
+                  >
+                    <Scissors className="w-4 h-4 mr-2 flex-shrink-0" />
+                    <span className="text-sm">{service}</span>
+                  </Button>
+                ))}
+              </div>
+            </div>
+
             {/* Barber Selection */}
             <div className="space-y-4">
               <Label className="text-lg font-semibold text-foreground flex items-center gap-2">
