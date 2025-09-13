@@ -10,7 +10,7 @@ const Contact = () => {
   }, {
     icon: Phone,
     title: "Telefone",
-    info: "(11) 99999-9999",
+    info: "55 87 8156-0908",
     subtitle: "WhatsApp disponível"
   }, {
     icon: Clock,
